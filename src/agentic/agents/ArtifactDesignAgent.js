@@ -74,6 +74,10 @@ export class ArtifactDesignAgent extends BaseAgent {
       pageSpec: {
         className: pageClassName,
         locatorClassName,
+        locatorEntries:
+          locators.length > 0
+            ? locators
+            : [{ name: "mainContent", selector: "main", description: "Main content region" }],
         flowActions: flowActions.map((action) => ({
           type: action.type,
           locatorName: action.locatorName || null,
@@ -87,8 +91,12 @@ export class ArtifactDesignAgent extends BaseAgent {
           waitTime: action.input?.time || null
         })),
         assertion: assertionAction?.locatorName
-          ? { locatorName: assertionAction.locatorName, elementName: assertionAction.elementName }
-          : { locatorName: "mainContent", elementName: "Main Content Marker" }
+          ? {
+              locatorName: assertionAction.locatorName,
+              selector: assertionAction.selector || assertionAction.input?.selector || null,
+              elementName: assertionAction.elementName
+            }
+          : { locatorName: "mainContent", selector: "main", elementName: "Main Content Marker" }
       },
       locatorSpec: {
         className: locatorClassName,

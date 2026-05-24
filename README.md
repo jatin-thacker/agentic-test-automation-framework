@@ -6,13 +6,13 @@ This repository is a lightweight JavaScript automation framework using:
 - Playwright MCP (`@playwright/mcp`) for agentic browser navigation
 - Cucumber
 - Page Object Model
-- Locator classes
+- JSON locator arrays in page classes
 - Shared utilities
 - Excel test data
 
 ## Test flow
 
-`feature` -> `step definition` -> `page object` -> `locator + utils` -> `reports`
+`feature` -> `step definition` -> `page object` -> `page locatorDefinitions + utils` -> `reports`
 
 ## Project structure
 
@@ -61,7 +61,7 @@ user_story/
 - `features/login.feature`
 - Step definitions read rows from `src/data/TestData.xlsx`
 - Page actions are implemented in `src/pages/LoginPage.js`
-- Selectors live in `src/locators/LoginLocators.js`
+- Selectors are maintained as a JSON array in `src/pages/LoginPage.js` (`locatorDefinitions`)
 
 ## Story inputs
 
@@ -70,13 +70,35 @@ user_story/
   - `user_story/` (end-to-end sample stories)
 - Example:
   - `npm run agent:from-story -- user_story/login-and-logout-flow.story.md`
+  - `npm run agent:from-story -- user_story/verified-saucedemo-user-stories.story.md`
+- Ready-to-run individual stories:
+  - `user_story/us1-login-valid-and-invalid-credentials.story.md`
+  - `user_story/us2-browse-and-sort-products.story.md`
+  - `user_story/us3-add-and-remove-products-from-cart.story.md`
+  - `user_story/us4-checkout-and-complete-order.story.md`
+  - `user_story/us5-checkout-validation-and-logout.story.md`
+
+## App config for non-technical users
+
+- Edit one file: `src/config/AppConfig.json`
+- Example fields:
+  - `appName`
+  - `baseUrl`
+
+## Get Started Now
+
+1. Update `src/config/AppConfig.json` if needed.
+2. Run:
+   - `npm run agent:from-story -- user_story/us1-login-valid-and-invalid-credentials.story.md`
+3. Review output with:
+   - `npm run agent:review`
 
 ## Agentic flow (optional layer)
 
 1. User story is parsed.
 2. Framework conventions are inspected.
 3. Playwright MCP launches the app and creates a story-intent navigation trace (page metadata, interactive discovery, and action execution trace).
-4. Artifacts are mapped into `features`, `steps`, `pages`, and `locators`.
+4. Artifacts are mapped into `features`, `steps`, and `pages` (with JSON locator arrays in page classes).
 5. Validation + GitHub CLI workflow draft + LinkedIn draft are generated.
 6. Optional: inject an external `actionPlanner` dependency into `AppNavigatorAgent` for prompt/LLM-driven action planning.
 

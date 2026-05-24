@@ -3,7 +3,6 @@ import BaseAgent from "../core/BaseAgent.js";
 import FeatureFileRenderer from "../renderers/FeatureFileRenderer.js";
 import StepDefinitionRenderer from "../renderers/StepDefinitionRenderer.js";
 import PageObjectRenderer from "../renderers/PageObjectRenderer.js";
-import LocatorRenderer from "../renderers/LocatorRenderer.js";
 
 export class CodeMapperAgent extends BaseAgent {
   constructor(deps = {}) {
@@ -11,7 +10,6 @@ export class CodeMapperAgent extends BaseAgent {
     this.featureRenderer = new FeatureFileRenderer();
     this.stepRenderer = new StepDefinitionRenderer();
     this.pageRenderer = new PageObjectRenderer();
-    this.locatorRenderer = new LocatorRenderer();
   }
 
   async execute(_input = {}, context = {}) {
@@ -20,7 +18,6 @@ export class CodeMapperAgent extends BaseAgent {
     const featureFile = `${slug}.feature`;
     const stepFile = `${slug}.steps.js`;
     const pageFile = `${artifactSpec.pageSpec?.className || "AgenticGeneratedPage"}.js`;
-    const locatorFile = `${artifactSpec.locatorSpec?.className || "AgenticGeneratedLocators"}.js`;
 
     const artifacts = [
       {
@@ -37,11 +34,6 @@ export class CodeMapperAgent extends BaseAgent {
         type: "page",
         targetPath: path.join("src", "pages", pageFile),
         content: this.pageRenderer.render(artifactSpec.pageSpec)
-      },
-      {
-        type: "locator",
-        targetPath: path.join("src", "locators", locatorFile),
-        content: this.locatorRenderer.render(artifactSpec.locatorSpec)
       }
     ];
 

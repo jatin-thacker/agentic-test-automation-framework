@@ -57,7 +57,8 @@ This file describes the full project layout and purpose of each folder/subfolder
 
 | Path | Purpose |
 |---|---|
-| `src/config/AppConfig.js` | App-level configuration (`baseUrl`, app name) from environment. |
+| `src/config/AppConfig.json` | Primary non-technical app configuration file (`appName`, `baseUrl`). |
+| `src/config/AppConfig.js` | Thin runtime wrapper that loads and exports `AppConfig.json`. |
 | `src/config/EnvironmentConfig.js` | Environment variable loader + typed getters (string/boolean/number). |
 | `src/config/ReportConfig.js` | Canonical report directory path configuration. |
 | `src/config/TestConfig.js` | Runtime test config (`browser`, `headed/headless`, timeout, retry count). |
@@ -92,9 +93,9 @@ This file describes the full project layout and purpose of each folder/subfolder
 
 | Path | Purpose |
 |---|---|
-| `src/locators/BaseLocators.js` | Minimal locator helper base (`by(page, selector)`). |
-| `src/locators/LoginLocators.js` | Static selectors for baseline login flow. |
-| `src/locators/AgenticLoginShouldSupportValidAndInvalidUserOutcomesLocators.js` | Generated selectors for agentic scenario. |
+| `src/locators/BaseLocators.js` | Locator helper base (`by`, `byName`) for optional shared locator registries. |
+| `src/locators/LoginLocators.js` | JSON-entry-style locator registry for baseline login flow (compatibility/helper usage). |
+| `src/locators/AgenticLoginShouldSupportValidAndInvalidUserOutcomesLocators.js` | JSON-entry-style locator registry for generated login scenario (compatibility/helper usage). |
 
 ---
 
@@ -103,8 +104,8 @@ This file describes the full project layout and purpose of each folder/subfolder
 | Path | Purpose |
 |---|---|
 | `src/pages/BasePage.js` | Base page abstraction initializing shared utilities on top of Playwright `page`. |
-| `src/pages/LoginPage.js` | Baseline login behavior/actions/assertions using framework utilities. |
-| `src/pages/AgenticLoginShouldSupportValidAndInvalidUserOutcomesPage.js` | Generated page behavior for agentic scenario. |
+| `src/pages/LoginPage.js` | Baseline login behavior/actions/assertions using framework utilities and in-class `locatorDefinitions` array. |
+| `src/pages/AgenticLoginShouldSupportValidAndInvalidUserOutcomesPage.js` | Generated page behavior for agentic scenario using in-class `locatorDefinitions` array. |
 
 ---
 
@@ -184,7 +185,7 @@ This file describes the full project layout and purpose of each folder/subfolder
 | `src/agentic/agents/FrameworkContextAgent.js` | Inspects framework conventions and existing runtime structure. |
 | `src/agentic/agents/AppNavigatorAgent.js` | Produces a story-intent navigation trace via Playwright MCP-backed tool mappings (auth handling, page metadata snapshots, interactive discovery, exploration actions) and supports optional external planner injection for prompt/LLM-driven action planning. |
 | `src/agentic/agents/ArtifactDesignAgent.js` | Converts story + trace into framework artifact specifications. |
-| `src/agentic/agents/CodeMapperAgent.js` | Renders feature/steps/pages/locators from specs. |
+| `src/agentic/agents/CodeMapperAgent.js` | Renders feature/steps/pages from specs (pages include JSON locator arrays). |
 | `src/agentic/agents/ValidationAgent.js` | Validates generated specs/artifacts before apply. |
 | `src/agentic/agents/GitHubWorkflowAgent.js` | Produces GitHub CLI/UI publication workflow notes. |
 | `src/agentic/agents/LinkedInDraftAgent.js` | Produces draft LinkedIn launch post content. |
@@ -210,8 +211,8 @@ This file describes the full project layout and purpose of each folder/subfolder
 |---|---|
 | `src/agentic/renderers/FeatureFileRenderer.js` | Renders `.feature` content from feature spec. |
 | `src/agentic/renderers/StepDefinitionRenderer.js` | Renders step definition JS from step spec. |
-| `src/agentic/renderers/PageObjectRenderer.js` | Renders page object class from page spec. |
-| `src/agentic/renderers/LocatorRenderer.js` | Renders locator class from locator spec. |
+| `src/agentic/renderers/PageObjectRenderer.js` | Renders page object class from page spec, including `locatorDefinitions` JSON arrays and locator resolver helpers. |
+| `src/agentic/renderers/LocatorRenderer.js` | Optional locator-registry renderer (JSON-entry style) for compatibility/shared reuse. |
 
 ### Validation
 
@@ -253,7 +254,7 @@ This file describes the full project layout and purpose of each folder/subfolder
 ## Runtime flow summary
 
 1. Baseline BDD flow:
-   feature -> step definition -> page object -> locator/utils -> report.
+   feature -> step definition -> page object (with locatorDefinitions arrays) -> utils -> report.
 
 2. Optional agentic flow:
    story parser -> framework context -> Playwright MCP app trace -> artifact design -> code mapping -> validation -> review -> apply.

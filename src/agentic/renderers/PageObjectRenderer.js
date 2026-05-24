@@ -1,6 +1,6 @@
-function locatorExpression(locatorClassName, action = {}) {
+function locatorExpression(action = {}) {
   if (action.locatorName) {
-    return `${locatorClassName}.${action.locatorName}(this.page)`;
+    return `this.locator(${JSON.stringify(action.locatorName)})`;
   }
   if (action.selector) {
     return `this.page.locator(${JSON.stringify(action.selector)})`;
@@ -22,19 +22,34 @@ function keyExpression(action = {}) {
   return JSON.stringify("Enter");
 }
 
+function renderLocatorDefinitions(locatorEntries = []) {
+  const entries = Array.isArray(locatorEntries) && locatorEntries.length > 0
+    ? locatorEntries
+    : [{ name: "mainContent", selector: "main", description: "Main content region" }];
+
+  const lines = ["    this.locatorDefinitions = ["];
+  for (const entry of entries) {
+    lines.push(
+      `      { name: ${JSON.stringify(entry.name)}, selector: ${JSON.stringify(entry.selector)}, description: ${JSON.stringify(entry.description || entry.name)} },`
+    );
+  }
+  lines.push("    ];");
+  return lines.join("\n");
+}
+
 export class PageObjectRenderer {
   render(pageSpec = {}) {
     const className = pageSpec.className || "GeneratedPage";
-    const locatorClassName = pageSpec.locatorClassName || "GeneratedLocators";
     const assertion = pageSpec.assertion || {
-      locatorName: "successState",
+      locatorName: "mainContent",
+      selector: "main",
       elementName: "Expected Outcome"
     };
 
     const flowLines = [];
     for (const action of pageSpec.flowActions || []) {
       const elementName = action.elementName || action.type || "Element";
-      const locatorExpr = locatorExpression(locatorClassName, action);
+      const locatorExpr = locatorExpression(action);
 
       if (action.type === "navigate" && action.url) {
         flowLines.push(
@@ -85,16 +100,22 @@ export class PageObjectRenderer {
     }
 
     const assertionLocatorExpr = assertion.locatorName
-      ? `${locatorClassName}.${assertion.locatorName}(this.page)`
-      : 'this.page.locator("main")';
+      ? `this.locator(${JSON.stringify(assertion.locatorName)})`
+      : assertion.selector
+        ? `this.page.locator(${JSON.stringify(assertion.selector)})`
+        : 'this.page.locator("main")';
 
     return `import { AppConfig } from "../config/AppConfig.js";
 import BasePage from "./BasePage.js";
-import ${locatorClassName} from "../locators/${locatorClassName}.js";
 
 export class ${className} extends BasePage {
   constructor(page) {
     super(page);
+${renderLocatorDefinitions(pageSpec.locatorEntries)}
+  }
+
+  locator(key) {
+    return this.locatorByKey(this.locatorDefinitions, key);
   }
 
   async launchApplication() {

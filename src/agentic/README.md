@@ -32,6 +32,12 @@ Common story paths:
 - `user_story/login-and-logout-flow.story.md`
 - `user_story/incorrect-password-login.story.md`
 - `user_story/post-login-inventory.story.md`
+- `user_story/verified-saucedemo-user-stories.story.md`
+- `user_story/us1-login-valid-and-invalid-credentials.story.md`
+- `user_story/us2-browse-and-sort-products.story.md`
+- `user_story/us3-add-and-remove-products-from-cart.story.md`
+- `user_story/us4-checkout-and-complete-order.story.md`
+- `user_story/us5-checkout-validation-and-logout.story.md`
 
 ## Command registry
 
@@ -46,3 +52,4 @@ Common story paths:
 - Browser automation backend: `@playwright/mcp`
 - Local Playwright MCP runtime logs: `.playwright-mcp/`
 - `AppNavigatorAgent` supports an optional external `actionPlanner.plan(...)` hook for prompt/LLM-driven action planning when provided by orchestrator dependencies.
+- Generated page objects include `locatorDefinitions` JSON arrays for locator maintenance directly in page classes.

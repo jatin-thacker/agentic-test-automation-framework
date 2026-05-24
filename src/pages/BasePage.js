@@ -28,6 +28,21 @@ export class BasePage {
   async navigateTo(url, context = {}) {
     await this.uiUtils.navigateToWithLog(url, { context: { ...context, page: this.page } });
   }
+
+  /**
+   * Resolve locator by key from a locator definition array:
+   * [{ name: "usernameInput", selector: "[data-test='username']" }, ...]
+   * @param {Array<{name: string, selector: string}>} locatorDefinitions
+   * @param {string} key
+   * @returns {import('@playwright/test').Locator}
+   */
+  locatorByKey(locatorDefinitions = [], key = "") {
+    const entry = (locatorDefinitions || []).find((item) => item?.name === key);
+    if (!entry?.selector) {
+      throw new Error(`Locator '${key}' is not defined in page locatorDefinitions`);
+    }
+    return this.page.locator(entry.selector);
+  }
 }
 
 export default BasePage;
