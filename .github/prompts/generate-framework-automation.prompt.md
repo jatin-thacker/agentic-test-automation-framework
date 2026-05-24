@@ -5,26 +5,26 @@ description: Generate framework-compatible Cucumber automation for a selected st
 
 # /generate-framework-automation
 
-Use this prompt only when the user explicitly asks to generate automation for a selected story.
+Read `AGENTS.md` and `.github` instructions first.
 
-## Instructions
+Generate automation using:
 
-1. Read `AGENTS.md`.
-2. Read all files in `ai-demo/context/`.
-3. Inspect existing feature, step definition, page object, utility, data, and runner patterns.
-4. Read the selected story from `user_story/`.
-5. Create a run evidence folder under `ai-demo/runs/<timestamp>/`.
-6. Draft `story-analysis.md`, `generated-test-cases.md`, `ui-exploration-notes.md`, and `proposed-files.md`.
-7. Generate only framework-compatible assets:
-   - Cucumber feature files
-   - thin step definitions
-   - page objects
-   - safe test data updates if needed
-8. Reuse `BasePage.js` and existing utilities for actions, waits, assertions, screenshots, logging, Excel data, and reports.
-9. Do not create `.spec.js` files, `src/ai`, LLM API clients, mock LLM plans, fake AI npm scripts, or new framework architecture.
+- Cucumber feature files
+- thin step definitions
+- locator modules
+- page objects
+- `BasePage`
+- existing utilities
 
-## Output
+Rules:
 
-- Files created/updated.
-- Commands that should be run next.
-- Any assumptions or human-review points.
+- Locators own selectors.
+- Page objects own workflows.
+- Step definitions call page objects.
+- JavaScript only.
+- Do not create Playwright spec files.
+- Do not create `src/ai`.
+- Do not add LLM API code.
+- Do not add fake npm scripts.
+
+Write run evidence under `ai-demo/runs/<timestamp>/`.

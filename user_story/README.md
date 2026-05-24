@@ -1,7 +1,8 @@
 # User Story Inputs
 
-This folder contains SauceDemo user stories in `.story.md` format for future framework work.
+This folder contains the selected MVP SauceDemo user story for the first AI-assisted demo.
 
 Recommended start files:
-- `verified-saucedemo-user-stories.story.md` (all stories in one file)
-- `us001-login-valid-and-invalid-credentials.story.md` (single focused story)
+- `us004-complete-checkout-for-selected-products.story.md`
+
+Additional story candidates are archived under `_archive/user_story/`.

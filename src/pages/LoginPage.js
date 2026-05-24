@@ -1,19 +1,18 @@
 import { AppConfig } from "../config/AppConfig.js";
+import LoginLocators from "../locators/LoginLocators.js";
 import BasePage from "./BasePage.js";
 
 export class LoginPage extends BasePage {
   constructor(page) {
     super(page);
-    this.locatorDefinitions = [
-      { name: "usernameInput", selector: "[data-test='username']", description: "Username Input" },
-      { name: "passwordInput", selector: "[data-test='password']", description: "Password Input" },
-      { name: "loginButton", selector: "[data-test='login-button']", description: "Login Button" },
-      { name: "inventoryContainer", selector: "[data-test='inventory-container']", description: "Inventory Container" }
-    ];
   }
 
   locator(key) {
-    return this.locatorByKey(this.locatorDefinitions, key);
+    const selector = LoginLocators[key];
+    if (!selector) {
+      throw new Error(`Login locator '${key}' is not defined`);
+    }
+    return this.page.locator(selector);
   }
 
   async launchApplication() {

@@ -1,15 +1,17 @@
 ---
-applyTo: "features/**/*.feature,features/step-definitions/**/*.js,src/pages/**/*.js,src/data/**/*"
+applyTo: "features/**/*.feature,features/step-definitions/**/*.js,src/locators/**/*.js,src/pages/**/*.js,src/data/**/*"
 ---
 
 # Automation Generation Rules
 
-- Do not create a new framework.
-- Do not create Playwright `.spec.js` files by default.
-- Do not bypass Cucumber, page objects, or framework utilities.
-- Step definitions should contain orchestration only and delegate browser behavior to page objects.
-- Page objects should expose business methods such as `loginWithCredentials`, `addProductToCart`, or `verifyOrderComplete`.
-- Prefer stable `data-test` selectors when available.
-- Use Excel-backed test data only when it fits the existing `ExcelHelper` pattern cleanly.
-- Keep generated changes small, reviewable, and scoped to the selected story.
+- Create or update locator files for new UI elements.
+- Create or update page objects for workflows.
+- Create or update feature and step definition files for scenarios.
+- Keep step definitions thin.
+- Reuse `BasePage`.
+- Reuse existing utilities for UI actions, waits, assertions, screenshots, logging, Excel data, files, and reports.
+- Prefer stable `data-test` selectors.
+- Do not hardcode selectors in step definitions.
+- Avoid hardcoding selectors in page objects unless there is a documented exception.
+- Do not add dependencies unless necessary and justified.
 - Do not edit runtime output folders as source.

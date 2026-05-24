@@ -13,11 +13,12 @@ test-results/
 
 # Playwright/MCP local runtime
 .playwright-mcp/
-aidemo/ 
+
+# Local exports
+*.zip
 
 # OS/editor noise
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-*.zip

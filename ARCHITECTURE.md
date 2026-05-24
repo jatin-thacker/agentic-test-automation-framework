@@ -2,42 +2,53 @@
 
 ## Overview
 
-This is a Playwright + Cucumber test automation framework with page objects, reusable utilities, Excel-backed test data, framework-specific errors, test/report runners, and generated execution reports.
+This is a JavaScript Playwright + Cucumber test automation framework with Cucumber features, thin step definitions, locator modules, page objects, reusable utilities, Excel-backed test data, custom errors, runners, and generated reports.
 
-The current executable baseline is the SauceDemo login smoke test. Runtime output and dependencies, including `src/reports/`, `playwright-report/`, `test-results/`, and `node_modules/`, are excluded from the source architecture.
+The current executable baseline is the SauceDemo login smoke test. Runtime output and dependencies, including `src/reports/`, `playwright-report/`, `test-results/`, `.playwright-mcp/`, and `node_modules/`, are excluded from the source architecture.
 
 ## Source Structure
 
 | Path | Purpose |
 |---|---|
-| `features/` | Cucumber feature files, step definitions, and support hooks. |
+| `features/` | Cucumber feature files. |
+| `features/step-definitions/` | Thin Cucumber step bindings. |
+| `features/support/` | Cucumber world and hooks. |
 | `src/config/` | Environment, application, test, and report configuration. |
 | `src/data/` | Test data assets such as `TestData.xlsx`. |
 | `src/errors/` | Custom framework error types. |
-| `src/pages/` | Page object model classes. |
+| `src/locators/` | Selector ownership layer. This folder is mandatory and should not be empty. |
+| `src/pages/` | Page object model classes and page workflows. |
 | `src/runners/` | Test and report command orchestration. |
 | `src/utils/` | Shared framework utilities. |
 | `src/index.js` | Public module exports. |
-| `user_story/` | User-story documents for future test coverage planning. |
-| `ai-demo/` | Documentation and templates for future AI-assisted runs; not executable runtime code. |
+| `user_story/` | Selected MVP story input for the first demo. |
+| `.github/` | Reusable agent, prompt, and instruction layer. |
+| `ai-demo/` | Evidence-only folder for actual AI-assisted demo runs. |
 
-## Test Layer
+## Ownership Model
+
+```text
+feature file
+  -> step definition
+    -> page object method
+      -> locator file selector
+        -> BasePage / UI utils / assertion utils / wait utils
+```
+
+- Locator modules own selectors.
+- Page objects import locator modules and implement page-specific workflows.
+- Step definitions call page object methods and should avoid direct locator usage.
+- Selectors should not be duplicated inside page objects.
+
+## Current Baseline
 
 | Path | Purpose |
 |---|---|
-| `features/login.feature` | Defines the baseline login smoke scenario. |
-| `features/step-definitions/login.steps.js` | Maps Gherkin steps to page-object calls and data lookup. |
-| `features/support/world.js` | Creates shared scenario context, including browser/page helpers. |
-| `features/support/hooks.js` | Manages scenario setup/teardown, screenshots, and action-log flushing. |
-
-## Page Layer
-
-| Path | Purpose |
-|---|---|
-| `src/pages/BasePage.js` | Wires logger, screenshots, waits, UI actions, and assertions into page objects. |
-| `src/pages/LoginPage.js` | Owns SauceDemo login selectors, login actions, and inventory-page assertion. |
-
-Page objects are the home for selectors and page-specific workflows. Step definitions should call page methods instead of directly operating on Playwright locators.
+| `features/login.feature` | SauceDemo login smoke scenario. |
+| `features/step-definitions/login.steps.js` | Cucumber bindings for launch, login, and inventory verification. |
+| `src/locators/LoginLocators.js` | Login and inventory visibility selectors. |
+| `src/pages/LoginPage.js` | Login page workflows using `LoginLocators`. |
+| `src/data/TestData.xlsx` | Login test data used by the `StandardUser` row. |
 
 ## Runner Layer
 
@@ -60,7 +71,7 @@ Public commands:
 
 | Path | Purpose |
 |---|---|
-| `src/utils/ActionLogStore.js` | Stores action log events in memory and flushes them to JSON. |
+| `src/utils/ActionLogStore.js` | Stores action log events and flushes them to JSON. |
 | `src/utils/AssertionUtils.js` | Wraps Playwright assertions with logging and failure screenshots. |
 | `src/utils/Constants.js` | Defines action statuses, action types, and framework output paths. |
 | `src/utils/DataMaskingUtils.js` | Masks sensitive values before log output. |
@@ -74,53 +85,16 @@ Public commands:
 | `src/utils/UIUtils.js` | Provides logged navigation and browser interaction helpers. |
 | `src/utils/WaitUtils.js` | Provides logged explicit wait helpers. |
 
-## Error Layer
+## Agent Workflow Layer
 
-| Path | Purpose |
-|---|---|
-| `src/errors/FrameworkError.js` | Base custom error with metadata. |
-| `src/errors/AssertionFrameworkError.js` | Assertion failure wrapper. |
-| `src/errors/ExcelDataError.js` | Excel/test-data failure wrapper. |
-| `src/errors/ReportGenerationError.js` | Report generation failure wrapper. |
-| `src/errors/UIActionError.js` | UI interaction failure wrapper. |
-| `src/errors/WaitError.js` | Wait failure wrapper. |
+`.github/` is the single reusable agent/prompt/instruction layer:
 
-## Configuration And Data
+- `.github/copilot-instructions.md`
+- `.github/instructions/`
+- `.github/prompts/`
+- `.github/agents/`
 
-| Path | Purpose |
-|---|---|
-| `src/config/AppConfig.js` | Loads app configuration. |
-| `src/config/AppConfig.json` | Stores application name and base URL. |
-| `src/config/EnvironmentConfig.js` | Reads environment variables. |
-| `src/config/ReportConfig.js` | Stores report configuration. |
-| `src/config/TestConfig.js` | Stores browser/headless/timeout/retry settings. |
-| `src/data/TestData.xlsx` | Excel data used by the login scenario. |
-
-## AI-Readiness Layer
-
-| Path | Purpose |
-|---|---|
-| `AGENTS.md` | Repo-level instructions for Codex and other coding agents. |
-| `ai-demo/context/framework-map.md` | Current framework map and baseline scenario notes. |
-| `ai-demo/context/framework-rules.md` | Hard rules for generated automation. |
-| `ai-demo/context/generation-contract.md` | Allowed and forbidden future generated outputs. |
-| `ai-demo/context/execution-contract.md` | Verification flow for future AI-assisted runs. |
-| `ai-demo/context/reporting-contract.md` | Required content for future run reports. |
-| `ai-demo/context/demo-positioning.md` | Demo-safe positioning language. |
-| `ai-demo/inputs/` | Input templates for stories, prompts, and URLs. |
-| `ai-demo/run-template/` | Placeholder evidence files for future generation runs. |
-
-This layer is intentionally non-executable. It does not add AI npm scripts, LLM clients, mock plans, or runtime generation code.
-
-## Runtime Flow
-
-1. A command such as `npm run test:smoke` starts Cucumber.
-2. Cucumber support code creates the Playwright browser context and scenario world.
-3. `login.steps.js` reads test data and delegates behavior to `LoginPage`.
-4. `LoginPage` calls shared utilities from `BasePage`.
-5. Utilities log actions, wait for elements, perform UI operations, assert outcomes, and capture screenshots on failure.
-6. Hooks flush action logs under `src/reports/action-logs/`.
-7. `npm run report` reads the latest action log and writes `src/reports/execution-summary/summary.json` and `src/reports/html-report/summary.html`.
+`ai-demo/` is not an instruction source. It stores only run evidence under `ai-demo/runs/<timestamp>/`.
 
 ## Excluded From Source Architecture
 
@@ -128,6 +102,5 @@ This layer is intentionally non-executable. It does not add AI npm scripts, LLM 
 - `src/reports/`
 - `playwright-report/`
 - `test-results/`
-- temporary screenshots, traces, logs, summaries, and other generated runtime artifacts
-
-These paths can be regenerated and should not be treated as framework source.
+- `.playwright-mcp/`
+- zip exports and other temporary runtime artifacts
