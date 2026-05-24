@@ -26,6 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@cucumber/cucumber": "^12.2.0",
+    "@playwright/mcp": "^0.0.75",
     "@playwright/test": "^1.53.0",
     "dotenv": "^17.0.1",
     "exceljs": "^4.4.0",
