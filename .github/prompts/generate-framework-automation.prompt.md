@@ -26,8 +26,10 @@ Provide:
 - Prefer robust selector strategies, not brittle XPath/CSS unless justified
 - Treat Playwright MCP as the browser interaction and exploration layer for the LLM/agent
 - Strictly use Playwright MCP for locator creation and validation by default, unless explicitly instructed otherwise
-- Prefer `npm run mcp` with the shared Playwright MCP browser session for live page inspection and locator confirmation before committing
-- Use `npx playwright codegen` only as a fallback when shared MCP browser access is unavailable
+- Use the active Playwright MCP tool interface for live page inspection and locator confirmation.
+- Do not use `npm run mcp` as a substitute for MCP tools.
+- Do not use `npx playwright codegen` unless the user explicitly authorizes fallback.
+- If Playwright MCP tools are unavailable, clearly state that MCP is unavailable in this agent session and stop before locator validation.
 - Use MCP for locator creation/exploration, not as a test execution workflow
 - Document inferred or unvalidated locators clearly and request confirmation
 - Include assumptions and confirmation points

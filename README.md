@@ -23,7 +23,6 @@ npm run test:smoke
 npm run test:headed
 npm run report
 npm run clean
-npm run mcp
 npm run inspect
 ```
 
@@ -31,20 +30,30 @@ npm run inspect
 
 This repository is designed for an LLM-assisted workflow where the agent uses Playwright MCP as the browser interaction and exploration layer.
 
-- Treat `npm run mcp` as the primary LLM/MCP locator creation and validation workflow.
+- Playwright MCP must be accessed through the active MCP client/tool interface.
+- Do not use `npm run mcp` as an MCP workflow.
+- Do not use `npx playwright codegen` unless explicitly approved as a manual fallback.
 - Prefer using the shared Playwright MCP browser session provided by the editor/agent integration instead of opening a separate generic browser page.
 - Use MCP to inspect live page structure, generate locator candidates, and confirm selectors before updating locator modules.
 - If your installed Playwright version supports a dedicated `mcp` command in the future, that is also acceptable.
 
 ```bash
-npm run mcp
-```
+Playwright MCP is accessed through the MCP client integration, not through the test runner.
 
-If the shared Playwright MCP browser session is unavailable, use the Playwright codegen fallback:
+The MCP client should be configured with:
 
-```bash
-npx playwright codegen --target=javascript https://www.saucedemo.com/
-```
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}```
+
+If the shared Playwright MCP browser session is unavailable, stop and report that MCP is unavailable in the current agent session.
+
+Do not use Playwright codegen unless the user explicitly approves a manual fallback.
 
 Use the generated selectors to update `src/locators/*.js` and keep step definitions free of selectors.
 

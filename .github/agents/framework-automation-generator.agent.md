@@ -38,7 +38,8 @@ After test cases are approved and there is enough application context, UI struct
 If Playwright MCP tools are unavailable in the current agent environment, stop and report:
 - MCP tools are not available to this agent session.
 - Locator validation cannot be completed through MCP.
-- Codegen fallback requires explicit user approval- Prefer shared Playwright MCP browser access instead of opening a separate browser session with generic browser tools
+- Codegen fallback requires explicit user approval
+- Prefer shared Playwright MCP browser access instead of opening a separate browser session with generic browser tools
 - Use MCP for browser exploration and selector confirmation, not as a substitute for formal test execution
 - Document any inferred selectors clearly when live validation is not possible
 - Keep generated automation aligned to business intent
