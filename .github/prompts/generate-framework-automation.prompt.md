@@ -24,6 +24,8 @@ Provide:
 - Use page objects for workflows and locator modules for selectors
 - Reuse `BasePage` and existing utilities
 - Prefer robust selector strategies, not brittle XPath/CSS unless justified
+- Validate selectors with Playwright MCP or browser inspector when real-time access is available
+- Document inferred or unvalidated locators clearly and request confirmation
 - Include assumptions and confirmation points
 
 ## Output format
