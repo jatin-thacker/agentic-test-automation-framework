@@ -1,0 +1,10 @@
+User story: Inventory page loads after authentication
+
+As a signed-in shopper,
+I want to see the inventory container after login,
+so that I know product data is ready for browsing.
+
+Acceptance Criteria:
+- User can sign in with valid credentials.
+- Inventory container should be visible after login.
+- User should remain on inventory experience after load.

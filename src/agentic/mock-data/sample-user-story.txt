@@ -1,0 +1,11 @@
+User story: Login should support valid and invalid user outcomes
+
+As a shopper,
+I want to log in using my credentials,
+so that I can access my inventory when valid and see an error when invalid.
+
+Acceptance Criteria:
+- User can launch application.
+- User can submit username and password.
+- Valid user should land on inventory.
+- Invalid or locked user should see login error.

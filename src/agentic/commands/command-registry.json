@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "commands": [
+    {
+      "id": "help",
+      "name": "/help",
+      "aliases": ["/", "help"],
+      "description": "List available agentic commands",
+      "usage": "/help",
+      "handler": "help"
+    },
+    {
+      "id": "from-story",
+      "name": "/from-story",
+      "aliases": ["from-story", "/generate"],
+      "description": "Run agentic dry-run from a story file",
+      "usage": "/from-story [storyPath]",
+      "handler": "fromStory"
+    },
+    {
+      "id": "review",
+      "name": "/review",
+      "aliases": ["review"],
+      "description": "Review the latest proposed run",
+      "usage": "/review",
+      "handler": "reviewLatest"
+    },
+    {
+      "id": "apply",
+      "name": "/apply",
+      "aliases": ["apply"],
+      "description": "Apply the latest valid proposed run",
+      "usage": "/apply",
+      "handler": "applyLatest"
+    },
+    {
+      "id": "github-flow",
+      "name": "/github-flow",
+      "aliases": ["github-flow", "/gh-flow"],
+      "description": "Show latest GitHub workflow draft path",
+      "usage": "/github-flow",
+      "handler": "showGitHubFlow"
+    },
+    {
+      "id": "linkedin",
+      "name": "/linkedin",
+      "aliases": ["linkedin", "/linkedin-draft"],
+      "description": "Show latest LinkedIn post draft path",
+      "usage": "/linkedin",
+      "handler": "showLinkedInDraft"
+    }
+  ]
+}
