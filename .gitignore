@@ -1,10 +1,22 @@
-/.env.example
-/.playwright-mcp
-/cucumber.cjs
-/node_modules
-/package-lock.json
-/playwright.config.js
-/starter.MD
-/src/ai/runs/
-/src/reports/
+# Dependencies
+node_modules/
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# Generated reports and test artifacts
+src/reports/
+playwright-report/
+test-results/
+
+# Playwright/MCP local runtime
+.playwright-mcp/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 *.zip
