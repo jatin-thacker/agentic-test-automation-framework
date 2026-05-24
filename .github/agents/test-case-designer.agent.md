@@ -20,6 +20,7 @@ When business requirements, stories, acceptance criteria, or UI observations are
 - Personas, roles, and data constraints
 - UI observations, screenshots, or exploratory notes
 - Existing coverage or regression priorities
+- Shared Playwright MCP browser session or selector confirmation evidence when available
 
 ## What this agent must do
 

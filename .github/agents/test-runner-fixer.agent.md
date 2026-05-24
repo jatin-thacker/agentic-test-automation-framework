@@ -25,6 +25,7 @@ After automation is generated and execution evidence is available from test runs
 - Review execution evidence before making conclusions
 - Classify failures into root cause categories
 - Determine whether the issue is application, data, environment, locator, timing, or framework related
+- When locator or UI issues require validation, use the available Playwright MCP shared browser feature to verify selectors and page state
 - Recommend minimal safe fixes
 - Apply only high-confidence code fixes when enough context exists
 - Preserve test intent and assertions

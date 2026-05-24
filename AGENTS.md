@@ -42,6 +42,7 @@
 - Do not create `src/ai` runtime code.
 - `.github/` is the reusable agent/prompt/instruction layer.
 - `ai-demo/` is only for generated run evidence.
+- Prefer shared Playwright MCP browser sessions for interactive locator discovery and UI validation rather than launching generic browser tools.
 - The LLM/MCP interaction model is expressed through prompts, agent instructions, and manual MCP sessions, not repo runtime code.
 
 ## Verification Rules

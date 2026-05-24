@@ -30,6 +30,7 @@ After test case design, framework automation generation, and execution/fix evide
 - Document defects, risks, and next steps
 - Clearly separate completed work from planned work
 - Reference evidence files when available
+- Highlight Playwright MCP browser session evidence when it is part of the execution context
 
 ## What this agent must not do
 

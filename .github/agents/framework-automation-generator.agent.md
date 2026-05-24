@@ -32,6 +32,7 @@ After test cases are approved and there is enough application context, UI struct
 - Treat Playwright MCP as the live browser interaction layer for locator generation and page exploration
 - Strictly use Playwright MCP for locator creation and validation by default, unless explicitly instructed otherwise
 - Prefer `npm run mcp` or `npx playwright codegen` as the locator creation/validation workflow
+- Prefer shared Playwright MCP browser access instead of opening a separate browser session with generic browser tools
 - Use MCP for browser exploration and selector confirmation, not as a substitute for formal test execution
 - Document any inferred selectors clearly when live validation is not possible
 - Keep generated automation aligned to business intent

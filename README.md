@@ -32,6 +32,7 @@ npm run inspect
 This repository is designed for an LLM-assisted workflow where the agent uses Playwright MCP as the browser interaction and exploration layer.
 
 - Treat `npm run mcp` as the primary LLM/MCP locator creation and validation workflow.
+- Prefer using the shared Playwright MCP browser session provided by the editor/agent integration instead of opening a separate generic browser page.
 - Use MCP to inspect live page structure, generate locator candidates, and confirm selectors before updating locator modules.
 - If your installed Playwright version supports a dedicated `mcp` command in the future, that is also acceptable.
 
@@ -39,7 +40,7 @@ This repository is designed for an LLM-assisted workflow where the agent uses Pl
 npm run mcp
 ```
 
-If you want to inspect page actions directly, use the Playwright codegen fallback:
+If the shared Playwright MCP browser session is unavailable, use the Playwright codegen fallback:
 
 ```bash
 npx playwright codegen --target=javascript https://www.saucedemo.com/
