@@ -1,0 +1,12 @@
+/.env.example
+/.playwright-mcp
+/cucumber.cjs
+/features
+/node_modules
+/package-lock.json
+/package.json
+/playwright.config.js
+/README.md
+/src
+/starter.MD
+/user_story
