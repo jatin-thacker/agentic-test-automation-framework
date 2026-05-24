@@ -92,12 +92,14 @@ Each run reads this knowledge first and writes updates after exploration and cod
 - `npm run agent:generate`
 - `npm run agent:review`
 - `npm run agent:apply`
+- `npm run agent:workflow`
 
 Compatibility aliases remain available:
 
 - `npm run ai:generate`
 - `npm run ai:review`
 - `npm run ai:apply`
+- `npm run ai:workflow`
 
 ## Framework Rules
 

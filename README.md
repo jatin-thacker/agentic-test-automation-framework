@@ -47,6 +47,14 @@ Apply the latest valid proposed run:
 npm run agent:apply
 ```
 
+Single command with review + optional apply + optional commit:
+
+```bash
+npm run agent:workflow -- --prompt "As a shopper I can log in and view inventory"
+npm run agent:workflow -- --prompt "..." --apply
+npm run agent:workflow -- --prompt "..." --commit
+```
+
 Run the normal framework tests:
 
 ```bash
@@ -138,6 +146,8 @@ src/ai/runs/
 ## Notes
 
 - `agent:generate`, `agent:review`, and `agent:apply` are the primary public commands.
+- `agent:workflow` adds one-command orchestration: generate -> review -> apply -> optional commit.
 - `ai:generate`, `ai:review`, and `ai:apply` remain as compatibility aliases.
+- `ai:workflow` is a compatibility alias of `agent:workflow`.
 - The browser exploration step uses Playwright MCP directly from the runtime.
 - Generated code is reviewed first, then applied only when validation passes.
