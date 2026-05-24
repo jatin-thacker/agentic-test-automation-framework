@@ -13,6 +13,7 @@ test-results/
 
 # Playwright/MCP local runtime
 .playwright-mcp/
+aidemo/ 
 
 # OS/editor noise
 .DS_Store
