@@ -1,33 +1,33 @@
 # Copilot Instructions
 
-This is a JavaScript Playwright + Cucumber automation framework.
+This repository is a JavaScript Playwright + Cucumber automation framework.
 
 Do not create a new framework.
-
 Do not create `src/ai` runtime code.
-
 Do not add LLM API clients, mock plans, or fake AI npm scripts.
+Do not create Playwright `.spec.js` files unless explicitly requested.
+Do not treat generated reports or runtime output as source.
 
-Use the existing framework conventions:
+Use the shared framework conventions and agent guidance in:
+- `.github/instructions/framework-conventions.instructions.md`
+- `.github/instructions/generation-rules.instructions.md`
+- `.github/instructions/execution-reporting.instructions.md`
+- `.github/instructions/ai-boundaries.instructions.md`
 
-- Cucumber feature files under `features/`
-- Step definitions under `features/step-definitions/`
-- Support hooks/world under `features/support/`
-- Page objects under `src/pages/`
-- Locator modules under `src/locators/`
-- Utilities under `src/utils/`
-- Data under `src/data/`
-- Runners under `src/runners/`
+Framework structure:
+- `features/`
+- `features/step-definitions/`
+- `features/support/`
+- `src/pages/`
+- `src/locators/`
+- `src/utils/`
+- `src/data/`
+- `src/runners/`
 
-Ownership rules:
-
+Ownership:
 - Locator modules own selectors.
 - Page objects own workflows.
-- Step definitions call page object methods.
+- Step definitions call page objects.
 - Utilities own common actions, waits, assertions, screenshots, logging, and reporting.
 
 Generated automation must be JavaScript only.
-
-Do not create Playwright `.spec.js` files unless explicitly requested.
-
-Do not treat generated reports or runtime output as source.

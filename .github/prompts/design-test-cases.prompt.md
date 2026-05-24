@@ -1,28 +1,52 @@
 ---
 mode: agent
-description: Design Cucumber-ready test cases from a selected story without editing source code.
+description: Design structured Cucumber-ready test cases from business stories and acceptance criteria.
 ---
 
 # /design-test-cases
 
-Read `AGENTS.md` and `.github` instructions first.
+## User input
+Provide:
+- user story or business requirement
+- acceptance criteria
+- personas and roles
+- known data constraints
+- UI observations or exploratory notes
 
-Given a user story from `user_story/`, produce:
+## Required context
+- Review `AGENTS.md` and `.github/instructions/*.instructions.md`
+- Target repository uses Playwright + Cucumber
+- Test design only, no automation code
 
-- story summary
-- acceptance criteria mapping
-- positive scenarios
-- negative scenarios
-- edge scenarios if useful
-- selected MVP automation scenario
-- Cucumber-ready scenario text
-- test data needs
-- assumptions and risks
+## Task instructions
+- Map the story to acceptance criteria
+- Identify positive, negative, boundary, and regression cases
+- Select a fit-for-purpose MVP automation scenario
+- Separate assumptions from confirmed requirements
+- Highlight missing requirements or open questions
 
-Do not edit source code.
+## Output format
+- Story summary
+- Acceptance criteria mapping
+- Test scenario table
+- Preconditions
+- Test data
+- Steps
+- Expected results
+- Priority
+- Automation suitability
+- Risk notes
+- Open questions
 
-Do not generate automation files.
+## Validation checklist
+- Each major case maps to acceptance criteria
+- Assumptions are explicitly stated
+- Automation suitability is assessed
+- No automation files are generated
+- No speculative business behavior is presented as fact
 
-Do not create `src/ai`.
-
-Do not create fake AI scripts.
+## Do not fabricate
+- requirements
+- execution results
+- automation output
+- business rules

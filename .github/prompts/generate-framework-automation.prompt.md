@@ -1,30 +1,48 @@
 ---
 mode: agent
-description: Generate framework-compatible Cucumber automation for a selected story.
+description: Generate repository-compliant automation artifacts for approved test cases.
 ---
 
 # /generate-framework-automation
 
-Read `AGENTS.md` and `.github` instructions first.
+## User input
+Provide:
+- approved test cases or scenario list
+- user story and acceptance criteria
+- existing repository structure
+- available selectors or UI element details
+- relevant page workflows
 
-Generate automation using:
+## Required context
+- Review `AGENTS.md` and `.github/instructions/*.instructions.md`
+- Repository uses JavaScript, Playwright, Cucumber
+- Existing runner scripts are in `package.json`
 
-- Cucumber feature files
-- thin step definitions
-- locator modules
-- page objects
-- `BasePage`
-- existing utilities
+## Task instructions
+- Generate or update automation artifacts that match the approved scope
+- Create feature files, step definitions, locator modules, and page objects only as needed
+- Use page objects for workflows and locator modules for selectors
+- Reuse `BasePage` and existing utilities
+- Prefer robust selector strategies, not brittle XPath/CSS unless justified
+- Include assumptions and confirmation points
 
-Rules:
+## Output format
+- Files to create/update with path and complete contents
+- Design rationale
+- Assumptions
+- Required manual confirmations
+- Suggested test command to run
 
-- Locators own selectors.
-- Page objects own workflows.
-- Step definitions call page objects.
-- JavaScript only.
-- Do not create Playwright spec files.
-- Do not create `src/ai`.
-- Do not add LLM API code.
-- Do not add fake npm scripts.
+## Validation checklist
+- Uses repository conventions and existing patterns
+- Step definitions are thin and business-readable
+- No selectors in step definitions
+- No `src/ai`, LLM API code, fake scripts, or `.spec.js`
+- Does not generate unsupported flows
+- Assumptions are clearly documented
 
-Write run evidence under `ai-demo/runs/<timestamp>/`.
+## Do not fabricate
+- selectors
+- application behavior
+- execution evidence
+- test results
