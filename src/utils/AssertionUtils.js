@@ -56,8 +56,7 @@ export class AssertionUtils {
       elementName,
       status: ACTION_STATUS.STARTED,
       scenarioName: context.scenarioName,
-      stepName: context.stepName,
-      agentName: context.agentName
+      stepName: context.stepName
     });
     try {
       const result = await action();
@@ -68,8 +67,7 @@ export class AssertionUtils {
         elementName,
         status: ACTION_STATUS.PASSED,
         scenarioName: context.scenarioName,
-        stepName: context.stepName,
-        agentName: context.agentName
+        stepName: context.stepName
       });
       return result;
     } catch (error) {
@@ -81,8 +79,7 @@ export class AssertionUtils {
         status: ACTION_STATUS.FAILED,
         errorMessage: error.message,
         scenarioName: context.scenarioName,
-        stepName: context.stepName,
-        agentName: context.agentName
+        stepName: context.stepName
       });
       if (this.screenshotUtils && context.page) {
         await this.screenshotUtils.captureScreenshotWithLog(context.page, `assertion-failure-${elementName}`, context);

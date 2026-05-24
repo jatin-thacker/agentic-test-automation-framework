@@ -316,8 +316,7 @@ export class UIUtils {
       elementName,
       status: ACTION_STATUS.STARTED,
       scenarioName: context.scenarioName,
-      stepName: context.stepName,
-      agentName: context.agentName
+      stepName: context.stepName
     });
     try {
       const result = await action();
@@ -328,8 +327,7 @@ export class UIUtils {
         elementName,
         status: ACTION_STATUS.PASSED,
         scenarioName: context.scenarioName,
-        stepName: context.stepName,
-        agentName: context.agentName
+        stepName: context.stepName
       });
       return result;
     } catch (error) {
@@ -351,8 +349,7 @@ export class UIUtils {
         screenshotPath,
         errorMessage: error.message,
         scenarioName: context.scenarioName,
-        stepName: context.stepName,
-        agentName: context.agentName
+        stepName: context.stepName
       });
       throw new UIActionError(description, {
         cause: error.message,

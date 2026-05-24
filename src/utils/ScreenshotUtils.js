@@ -32,8 +32,7 @@ export class ScreenshotUtils {
       description: `Capture screenshot: ${name}`,
       status: ACTION_STATUS.STARTED,
       scenarioName: context.scenarioName,
-      stepName: context.stepName,
-      agentName: context.agentName
+      stepName: context.stepName
     });
     await fs.ensureDir(this.outputDir);
     await page.screenshot({ path: filePath, fullPage: true });
@@ -44,8 +43,7 @@ export class ScreenshotUtils {
       status: ACTION_STATUS.PASSED,
       screenshotPath: filePath,
       scenarioName: context.scenarioName,
-      stepName: context.stepName,
-      agentName: context.agentName
+      stepName: context.stepName
     });
     return filePath;
   }

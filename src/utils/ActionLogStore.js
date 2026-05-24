@@ -8,7 +8,6 @@ import { DateUtils } from "./DateUtils.js";
  * @property {string} timestamp
  * @property {string} [scenarioName]
  * @property {string} [stepName]
- * @property {string} [agentName]
  * @property {string} actionType
  * @property {string} description
  * @property {string} [elementName]

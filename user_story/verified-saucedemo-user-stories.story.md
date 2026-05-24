@@ -1,4 +1,4 @@
-# SauceDemo User Stories for Agentic Test Automation
+# SauceDemo User Stories for Test Automation
 
 Base URL: https://www.saucedemo.com/  
 Primary valid username: standard_user  

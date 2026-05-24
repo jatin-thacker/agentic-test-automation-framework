@@ -2,115 +2,47 @@
 
 ## Overview
 
-This framework uses an AI-only, agent-first generation path:
+This is a Playwright + Cucumber test automation framework with page objects, reusable utilities, Excel-backed test data, and report generation.
 
-1. `EnglishPromptAgent` reads a user story, prompt, or legacy script and writes detailed BDD test cases.
-2. `MCPExplorerAgent` opens the live app through Playwright MCP and captures UI evidence.
-3. `FrameworkWriterAgent` uses the LLM to write runnable framework artifacts directly.
-
-The live project stays reviewable because generation is written to `src/ai/runs/proposed/<runId>/` first.
+The current baseline focuses on a SauceDemo login smoke test. The previous generation layer has been removed so the framework can be restarted from a clean foundation.
 
 ## Core Modules
 
 | Path | Purpose |
 |---|---|
-| `src/ai/AgentRuntime.js` | Main orchestration pipeline for the three-agent direct-authoring flow. |
-| `src/ai/AIWriter.js` | Compatibility wrapper that re-exports `AgentRuntime`. |
-| `src/ai/agents/EnglishPromptAgent.js` | LLM-backed BDD test case writer from plain-English user input. |
-| `src/ai/agents/MCPExplorerAgent.js` | LLM-backed MCP exploration planner. |
-| `src/ai/agents/FrameworkWriterAgent.js` | LLM-backed framework code writer (feature/steps/page). |
-| `src/ai/knowledge/AppKnowledgeStore.js` | Persistent knowledge manager for selectors/pages/run memory. |
-| `src/agentic/planners/LLMPlannerClient.js` | OpenAI-compatible JSON-only planner client with stage-aware mock support. |
-| `src/scm/client/PlaywrightMCPClient.js` | MCP browser client that maps high-level actions to Playwright MCP tools and fallback run-code execution. |
-| `src/agentic/validators/FrameworkArtifactValidator.js` | Validates the generated feature, step, page, and locator artifacts. |
-| `src/pages/BasePage.js` | Base page with `locatorDefinitions` array lookup support. |
-| `src/pages/LoginPage.js` | Baseline login smoke page object that stays in the live framework. |
+| `features/login.feature` | Baseline login smoke scenario. |
+| `features/step-definitions/login.steps.js` | Cucumber step bindings for login. |
+| `features/support/world.js` | Cucumber world setup for browser/page/test helpers. |
+| `features/support/hooks.js` | Browser lifecycle and scenario hooks. |
+| `src/pages/BasePage.js` | Shared page object helpers. |
+| `src/pages/LoginPage.js` | Login page object and selectors. |
+| `src/runners/test-runner.js` | CLI runner for headed/headless test execution. |
+| `src/runners/RunManager.js` | Test execution orchestration. |
+| `src/runners/ReportManager.js` | Report summary generation. |
+| `src/runners/report-runner.js` | Report CLI entrypoint. |
+| `src/utils/` | Logging, waits, assertions, screenshots, Excel data, and file helpers. |
+| `src/config/` | Runtime and application configuration. |
 
-## Generation Flow
+## Test Flow
 
-### 1. EnglishPromptAgent
-
-- Reads the source story/prompt/script and the framework context.
-- Returns structured BDD output:
-  - feature name
-  - scenario names
-  - step text
-  - naming hints
-  - acceptance criteria / assumptions
-
-### 2. MCPExplorerAgent
-
-- Uses the test cases to decide what to inspect in the browser.
-- Opens the app through Playwright MCP.
-- Collects browser evidence such as:
-  - interactive elements
-  - page metadata
-  - network traces
-  - selector hints
-- Can run follow-up verification actions before code is written.
-
-### 3. FrameworkWriterAgent
-
-- Uses the browser evidence plus the test cases to author the final code.
-- Writes the final file content directly from LLM output.
-- Keeps page-owned `locatorDefinitions` arrays as the default locator home.
-- Emits a separate locator registry only when selector reuse is clearly useful.
-
-## Run Package Layout
-
-Each proposed run writes the following trace files:
-
-- `source.json`
-- `framework-context.json`
-- `english-prompt-agent.json`
-- `mcp-explorer-agent.json`
-- `framework-writer-agent.json`
-- `plan.json`
-- `navigation-trace.json`
-- `naming-map.json`
-- `artifact-spec.json`
-- `validation-result.json`
-- `knowledge-before.md`
-- `knowledge-after.md`
-- `knowledge-delta.json`
-- `manifest.json`
-- `generated-files/`
-
-The `plan.json` file contains all three stage outputs plus the combined run context.
-
-## Knowledge Ecosystem
-
-The runtime keeps persistent application memory in:
-
-- `src/ai/knowledge/AppKnowledge.md`
-- `src/ai/knowledge/AppKnowledge.json`
-
-Each run reads this knowledge first and writes updates after exploration and code generation, so future runs can reuse known selectors and page/page-state signals.
+1. Cucumber loads feature files from `features/`.
+2. Support hooks create and close the Playwright browser context.
+3. Step definitions call page objects.
+4. Page objects use shared utilities for actions, waits, assertions, and screenshots.
+5. Reports and action logs are written under `src/reports/`.
 
 ## Public Commands
 
-- `npm run agent:generate`
-- `npm run agent:review`
-- `npm run agent:apply`
-- `npm run agent:workflow`
-
-Compatibility aliases remain available:
-
-- `npm run ai:generate`
-- `npm run ai:review`
-- `npm run ai:apply`
-- `npm run ai:workflow`
+- `npm test`
+- `npm run test:smoke`
+- `npm run test:headed`
+- `npm run report`
+- `npm run clean`
 
 ## Framework Rules
 
-- Page objects own their selectors through `locatorDefinitions` arrays.
-- Generated features stay in `features/`.
-- Generated step definitions stay in `features/step-definitions/`.
-- Generated page objects stay in `src/pages/`.
-- A separate locator registry is optional, not mandatory.
-- The positive login smoke scenario remains the only live baseline scenario.
-
-## Offline Validation
-
-- Set `LLM_MOCK_PLAN_PATH=src/ai/mock-data/sample-ai-plan.json` to run the three-agent flow without a live model.
-- The mock file is stage-aware and returns separate outputs for all three agents.
+- Page objects own their selectors and page-specific behavior.
+- Step definitions should stay thin and delegate browser behavior to page objects.
+- Shared interaction behavior belongs in `src/utils/`.
+- Configuration belongs in `src/config/`.
+- Test data belongs in `src/data/`.
