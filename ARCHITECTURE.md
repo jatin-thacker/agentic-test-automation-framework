@@ -182,7 +182,7 @@ This file describes the full project layout and purpose of each folder/subfolder
 |---|---|
 | `src/agentic/agents/UserStoryAgent.js` | Reads/parses user story input, extracts acceptance criteria, and derives step hints for downstream planning. |
 | `src/agentic/agents/FrameworkContextAgent.js` | Inspects framework conventions and existing runtime structure. |
-| `src/agentic/agents/AppNavigatorAgent.js` | Produces a story-intent navigation trace via Playwright MCP-backed tool mappings (auth handling, page metadata snapshots, interactive discovery, and exploration actions). |
+| `src/agentic/agents/AppNavigatorAgent.js` | Produces a story-intent navigation trace via Playwright MCP-backed tool mappings (auth handling, page metadata snapshots, interactive discovery, exploration actions) and supports optional external planner injection for prompt/LLM-driven action planning. |
 | `src/agentic/agents/ArtifactDesignAgent.js` | Converts story + trace into framework artifact specifications. |
 | `src/agentic/agents/CodeMapperAgent.js` | Renders feature/steps/pages/locators from specs. |
 | `src/agentic/agents/ValidationAgent.js` | Validates generated specs/artifacts before apply. |
