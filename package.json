@@ -1,0 +1,45 @@
+{
+  "name": "agentic-test-automation-framework",
+  "version": "1.0.0",
+  "description": "Lightweight Playwright + Cucumber demo automation framework with page objects, locators, and utilities",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "clean": "rimraf src/reports/cucumber-json src/reports/html-report src/reports/action-logs src/reports/execution-summary src/reports/screenshots playwright-report test-results",
+    "clean:agentic": "rimraf src/agentic/runs/proposed src/agentic/runs/applied src/agentic/runs/backups",
+    "agent:from-story": "node src/agentic/runners/agent-from-story-runner.js",
+    "agent:review": "node src/agentic/runners/agent-review-runner.js",
+    "agent:apply": "node src/agentic/runners/agent-apply-runner.js",
+    "agent:command": "node src/agentic/runners/agent-command-runner.js",
+    "test": "cucumber-js --config cucumber.cjs",
+    "test:smoke": "cucumber-js --config cucumber.cjs --tags \"@smoke\"",
+    "test:headed": "node src/runners/test-runner.js --headed",
+    "report": "node src/runners/report-runner.js"
+  },
+  "keywords": [
+    "agentic-testing",
+    "playwright",
+    "cucumber",
+    "demo-framework",
+    "bdd-automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@playwright/mcp": "^0.0.75",
+    "@cucumber/cucumber": "^12.2.0",
+    "@playwright/test": "^1.53.0",
+    "dotenv": "^17.0.1",
+    "exceljs": "^4.4.0",
+    "fs-extra": "^11.3.0",
+    "playwright": "^1.53.0",
+    "rimraf": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.28.0"
+  }
+}
