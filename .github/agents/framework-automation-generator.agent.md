@@ -30,6 +30,7 @@ After test cases are approved and there is enough application context, UI struct
 - Reuse `BasePage` and existing utilities
 - Prefer robust selectors (role, label, text, test id, semantic selectors)
 - Validate locators using Playwright MCP or browser inspection tools when real-time access is available
+- Prefer `npm run mcp` or `npx playwright codegen` as the selector validation workflow
 - Document any inferred selectors clearly when live validation is not possible
 - Keep generated automation aligned to business intent
 - Include file lists, assumptions, and required confirmations

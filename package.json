@@ -12,7 +12,9 @@
     "test": "cucumber-js --config cucumber.cjs",
     "test:smoke": "cucumber-js --config cucumber.cjs --tags \"@smoke\"",
     "test:headed": "node src/runners/test-runner.js --headed",
-    "report": "node src/runners/report-runner.js"
+    "report": "node src/runners/report-runner.js",
+    "mcp": "npx playwright codegen --target=javascript",
+    "inspect": "npx playwright codegen --target=javascript"
   },
   "keywords": [
     "playwright",

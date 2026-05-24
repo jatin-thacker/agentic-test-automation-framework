@@ -23,6 +23,33 @@ npm run test:smoke
 npm run test:headed
 npm run report
 npm run clean
+npm run mcp
+npm run inspect
+```
+
+## Playwright MCP / Selector Validation
+
+This repository supports Playwright MCP-style selector validation for demo-ready automation.
+
+- Run `npm run mcp` to launch the Playwright selector validation workflow via `codegen`.
+- If your installed Playwright version supports a dedicated `mcp` command in the future, that is also acceptable.
+
+```bash
+npm run mcp
+```
+
+If you want to inspect page actions directly, use the Playwright codegen fallback:
+
+```bash
+npx playwright codegen --target=javascript https://www.saucedemo.com/
+```
+
+Use the generated selectors to update `src/locators/*.js` and keep step definitions free of selectors.
+
+Local MCP output is excluded from source control with `.gitignore`:
+
+```gitignore
+.playwright-mcp/
 ```
 
 ## Environment
