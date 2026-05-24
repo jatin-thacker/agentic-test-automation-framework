@@ -51,3 +51,12 @@
 - Run existing tests after source-code changes.
 - Generate a report only when test execution happened and report evidence is needed.
 - Summarize files changed, commands run, pass/fail status, and limitations.
+
+## Playwright MCP Usage Rules
+
+- Playwright MCP means using the MCP client/tool interface connected to `@playwright/mcp`.
+- Do not use `npx playwright codegen` as MCP.
+- Do not run `npm run mcp` for locator validation unless that script starts the actual `@playwright/mcp` server and the active agent can connect to it as an MCP client.
+- `npx playwright codegen` is a fallback-only manual inspection tool.
+- Codegen fallback requires explicit user approval.
+- If MCP tools are unavailable, state that MCP is unavailable in the current agent runtime instead of silently switching to codegen.
