@@ -8,8 +8,7 @@ export class LoginPage extends BasePage {
       { name: "usernameInput", selector: "[data-test='username']", description: "Username Input" },
       { name: "passwordInput", selector: "[data-test='password']", description: "Password Input" },
       { name: "loginButton", selector: "[data-test='login-button']", description: "Login Button" },
-      { name: "inventoryContainer", selector: "[data-test='inventory-container']", description: "Inventory Container" },
-      { name: "loginError", selector: "[data-test='error']", description: "Login Error" }
+      { name: "inventoryContainer", selector: "[data-test='inventory-container']", description: "Inventory Container" }
     ];
   }
 
@@ -41,12 +40,6 @@ export class LoginPage extends BasePage {
       "Inventory Container",
       { context: { page: this.page } }
     );
-  }
-
-  async assertLoginErrorVisible() {
-    await this.assertionUtils.expectElementVisibleWithLog(this.locator("loginError"), "Login Error", {
-      context: { page: this.page }
-    });
   }
 }
 

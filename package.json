@@ -1,7 +1,7 @@
 {
   "name": "agentic-test-automation-framework",
   "version": "1.0.0",
-  "description": "Lightweight Playwright + Cucumber demo automation framework with page objects, locators, and utilities",
+  "description": "Agent-first Playwright + Cucumber automation framework with LLM authoring and MCP browser navigation",
   "type": "module",
   "main": "src/index.js",
   "engines": {
@@ -9,11 +9,13 @@
   },
   "scripts": {
     "clean": "rimraf src/reports/cucumber-json src/reports/html-report src/reports/action-logs src/reports/execution-summary src/reports/screenshots playwright-report test-results",
-    "clean:agentic": "rimraf src/agentic/runs/proposed src/agentic/runs/applied src/agentic/runs/backups",
-    "agent:from-story": "node src/agentic/runners/agent-from-story-runner.js",
-    "agent:review": "node src/agentic/runners/agent-review-runner.js",
-    "agent:apply": "node src/agentic/runners/agent-apply-runner.js",
-    "agent:command": "node src/agentic/runners/agent-command-runner.js",
+    "clean:ai": "rimraf src/ai/runs/proposed src/ai/runs/applied src/ai/runs/backups",
+    "agent:generate": "node src/runners/ai-generate-runner.js",
+    "agent:review": "node src/runners/ai-review-runner.js",
+    "agent:apply": "node src/runners/ai-apply-runner.js",
+    "ai:generate": "node src/runners/ai-generate-runner.js",
+    "ai:review": "node src/runners/ai-review-runner.js",
+    "ai:apply": "node src/runners/ai-apply-runner.js",
     "test": "cucumber-js --config cucumber.cjs",
     "test:smoke": "cucumber-js --config cucumber.cjs --tags \"@smoke\"",
     "test:headed": "node src/runners/test-runner.js --headed",

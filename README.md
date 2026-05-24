@@ -1,111 +1,143 @@
-# Lightweight BDD Demo Framework
+# Agent-Driven AI Authoring
 
-This repository is a lightweight JavaScript automation framework using:
+This repository is an AI-only, agent-first Playwright + Cucumber framework.
 
-- Playwright
-- Playwright MCP (`@playwright/mcp`) for agentic browser navigation
-- Cucumber
-- Page Object Model
-- JSON locator arrays in page classes
-- Shared utilities
-- Excel test data
+The generation flow is:
 
-## Test flow
+1. `EnglishPromptAgent` turns a user story, prompt, or legacy script into detailed BDD test cases.
+2. `MCPExplorerAgent` opens the app through Playwright MCP, explores the live UI, and enriches selector/page evidence.
+3. `FrameworkWriterAgent` uses the LLM to write runnable framework artifacts directly (feature, steps, page, optional locator registry).
 
-`feature` -> `step definition` -> `page object` -> `page locatorDefinitions + utils` -> `reports`
+Everything is written to a reviewable run package first, then applied only after validation passes.
 
-## Project structure
+## What stays in the live framework
+
+- `features/login.feature` keeps the positive smoke login scenario.
+- `features/step-definitions/login.steps.js` drives that smoke flow.
+- `src/pages/LoginPage.js` owns the baseline login page behavior.
+- Locator definitions live inside page classes as JSON-style `locatorDefinitions` arrays.
+
+## Main commands
+
+Generate from a prompt, story file, or script:
+
+```bash
+npm run agent:generate -- --prompt "As a shopper, I want to log in so I can reach the inventory page."
+npm run agent:generate -- --story path/to/user-story.md
+npm run agent:generate -- --script path/to/legacy-playwright-script.js
+```
+
+The `ai:` commands are kept as aliases:
+
+```bash
+npm run ai:generate -- --prompt "As a shopper, I want to log in so I can reach the inventory page."
+npm run ai:review
+npm run ai:apply
+```
+
+Review the latest proposed run:
+
+```bash
+npm run agent:review
+```
+
+Apply the latest valid proposed run:
+
+```bash
+npm run agent:apply
+```
+
+Run the normal framework tests:
+
+```bash
+npm test
+npm run test:smoke
+npm run test:headed
+npm run report
+```
+
+## Environment
+
+Update `src/config/AppConfig.json` for app name and base URL.
+
+Useful `.env` values:
+
+- `PLAYWRIGHT_MCP_ARGS`
+- `PLAYWRIGHT_MCP_COMMAND`
+- `LLM_API_BASE_URL`
+- `LLM_API_KEY`
+- `LLM_MODEL`
+- `LLM_MOCK_PLAN_PATH`
+
+Use `LLM_MOCK_PLAN_PATH` when you want to validate the generation flow without calling a live model.
+
+Offline demo example for PowerShell:
+
+```powershell
+$env:LLM_MOCK_PLAN_PATH='src/ai/mock-data/sample-ai-plan.json'
+npm run agent:generate -- --prompt "Create a login smoke test for SauceDemo."
+```
+
+## Where AI output goes
+
+AI runs are saved under:
+
+- `src/ai/runs/proposed/<runId>/`
+- `src/ai/runs/applied/<runId>/`
+- `src/ai/runs/backups/<runId>/`
+
+Each proposed run includes:
+
+- `source.json`
+- `framework-context.json`
+- `english-prompt-agent.json`
+- `mcp-explorer-agent.json`
+- `framework-writer-agent.json`
+- `plan.json`
+- `navigation-trace.json`
+- `naming-map.json`
+- `artifact-spec.json`
+- `validation-result.json`
+- `knowledge-before.md`
+- `knowledge-after.md`
+- `knowledge-delta.json`
+- `manifest.json`
+- `generated-files/`
+
+## App knowledge ecosystem
+
+Persistent application knowledge is stored in:
+
+- `src/ai/knowledge/AppKnowledge.md`
+- `src/ai/knowledge/AppKnowledge.json`
+
+On every `agent:generate` run, the runtime reads this knowledge first and updates it after exploration/code generation so future runs reuse known selectors and page signals.
+
+## Project layout
 
 ```text
 features/
-  *.feature
+  login.feature
   step-definitions/
   support/
 
 src/
-  agentic/
+  ai/
   config/
-  data/
-  errors/
-  locators/
   pages/
-  reports/
   runners/
+  scm/
   utils/
 
-user_story/
-  *.story.md
+src/ai/runs/
+  proposed/
+  applied/
+  backups/
 ```
 
-## Setup
+## Notes
 
-1. `npm install`
-2. `copy .env.example .env` (Windows) or `cp .env.example .env`
-3. `npx playwright install`
-4. `npm test`
-
-## Scripts
-
-- `npm run clean`
-- `npm run agent:from-story`
-- `npm run agent:review`
-- `npm run agent:apply`
-- `npm run agent:command -- /help`
-- `npm test`
-- `npm run test:smoke`
-- `npm run test:headed`
-- `npm run report`
-
-## Demo scenario included
-
-- `features/login.feature`
-- Step definitions read rows from `src/data/TestData.xlsx`
-- Page actions are implemented in `src/pages/LoginPage.js`
-- Selectors are maintained as a JSON array in `src/pages/LoginPage.js` (`locatorDefinitions`)
-
-## Story inputs
-
-- You can run the agentic pipeline with stories from:
-  - `src/agentic/mock-data/`
-  - `user_story/` (end-to-end sample stories)
-- Example:
-  - `npm run agent:from-story -- user_story/login-and-logout-flow.story.md`
-  - `npm run agent:from-story -- user_story/verified-saucedemo-user-stories.story.md`
-- Ready-to-run individual stories:
-  - `user_story/us1-login-valid-and-invalid-credentials.story.md`
-  - `user_story/us2-browse-and-sort-products.story.md`
-  - `user_story/us3-add-and-remove-products-from-cart.story.md`
-  - `user_story/us4-checkout-and-complete-order.story.md`
-  - `user_story/us5-checkout-validation-and-logout.story.md`
-
-## App config for non-technical users
-
-- Edit one file: `src/config/AppConfig.json`
-- Example fields:
-  - `appName`
-  - `baseUrl`
-
-## Get Started Now
-
-1. Update `src/config/AppConfig.json` if needed.
-2. Run:
-   - `npm run agent:from-story -- user_story/us1-login-valid-and-invalid-credentials.story.md`
-3. Review output with:
-   - `npm run agent:review`
-
-## Agentic flow (optional layer)
-
-1. User story is parsed.
-2. Framework conventions are inspected.
-3. Playwright MCP launches the app and creates a story-intent navigation trace (page metadata, interactive discovery, and action execution trace).
-4. Artifacts are mapped into `features`, `steps`, and `pages` (with JSON locator arrays in page classes).
-5. Validation + GitHub CLI workflow draft + LinkedIn draft are generated.
-6. Optional: inject an external `actionPlanner` dependency into `AppNavigatorAgent` for prompt/LLM-driven action planning.
-
-## Playwright MCP only
-
-- The project uses one MCP client path: `PlaywrightMCPClient`.
-- There is no mock mode and no real-vs-mock switch.
-- Configure MCP args in `.env` with `PLAYWRIGHT_MCP_ARGS`.
-- Optional override: set `PLAYWRIGHT_MCP_COMMAND` only if your environment needs a custom command.
-- Local MCP runtime logs are written under `.playwright-mcp/`.
+- `agent:generate`, `agent:review`, and `agent:apply` are the primary public commands.
+- `ai:generate`, `ai:review`, and `ai:apply` remain as compatibility aliases.
+- The browser exploration step uses Playwright MCP directly from the runtime.
+- Generated code is reviewed first, then applied only when validation passes.

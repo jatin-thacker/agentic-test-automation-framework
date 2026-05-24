@@ -5,7 +5,5 @@
 /package-lock.json
 /playwright.config.js
 /starter.MD
-/user_storys
-/src/agentic/runs
-/src/reports
-/src/agentic/*.*
+/src/ai/runs/
+/src/reports/

@@ -71,6 +71,8 @@ export class PlaywrightMCPClient extends SCMClient {
           return await this.#pressKey(toolName, input);
         case SCMTools.waitFor:
           return await this.#waitFor(toolName, input);
+        case SCMTools.assertText:
+          return await this.#assertText(toolName, input);
         case SCMTools.probeElement:
           return await this.#probeElement(toolName, input);
         case SCMTools.getPageMetadata:
@@ -347,6 +349,36 @@ export class PlaywrightMCPClient extends SCMClient {
     `);
 
     return this.#ok(toolName, { selector, state, ...runResult });
+  }
+
+  async #assertText(toolName, input = {}) {
+    const selector = input.selector;
+    if (!selector) return this.#fail(toolName, "assertText requires input.selector");
+    const expectedText = String(input.text ?? input.expectedText ?? "").trim();
+    if (!expectedText) return this.#fail(toolName, "assertText requires input.text or input.expectedText");
+    const timeoutMs = Number(input.timeout ?? 10000);
+
+    const runResult = await this.#runPageCode(`
+      const locator = page.locator(${JSON.stringify(selector)});
+      await locator.waitFor({ state: "visible", timeout: ${JSON.stringify(timeoutMs)} });
+      const actualText = await locator.innerText({ timeout: ${JSON.stringify(timeoutMs)} }).catch(() => "");
+      const normalizedActual = String(actualText || "").replace(/\\s+/g, " ").trim();
+      const normalizedExpected = String(${JSON.stringify(expectedText)}).replace(/\\s+/g, " ").trim();
+      if (!normalizedActual.includes(normalizedExpected)) {
+        throw new Error(\`Expected text "\${normalizedExpected}" in ${JSON.stringify(selector)} but found "\${normalizedActual}"\`);
+      }
+      return {
+        selector: ${JSON.stringify(selector)},
+        expectedText: normalizedExpected,
+        actualText: normalizedActual
+      };
+    `);
+
+    return this.#ok(toolName, {
+      selector,
+      expectedText,
+      ...runResult
+    });
   }
 
   async #probeElement(toolName, input = {}) {

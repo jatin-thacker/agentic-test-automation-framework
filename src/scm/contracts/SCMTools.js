@@ -7,6 +7,7 @@ export const SCMTools = Object.freeze({
   selectOption: "selectOption",
   pressKey: "pressKey",
   waitFor: "waitFor",
+  assertText: "assertText",
   probeElement: "probeElement",
   getPageMetadata: "getPageMetadata",
   collectInteractiveElements: "collectInteractiveElements",

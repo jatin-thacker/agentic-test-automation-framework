@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "app": {
+    "name": "SauceDemo",
+    "baseUrl": "https://www.saucedemo.com/"
+  },
+  "updatedAt": "bootstrap",
+  "selectors": [],
+  "pages": [],
+  "runs": []
+}

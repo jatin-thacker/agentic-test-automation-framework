@@ -23,8 +23,3 @@ Then("the user should be navigated to the inventory page", async function verify
   const loginPage = getPageObject(this);
   await loginPage.assertInventoryPageVisible();
 });
-
-Then("the user should see a login error message", async function verifyLoginError() {
-  const loginPage = getPageObject(this);
-  await loginPage.assertLoginErrorVisible();
-});
