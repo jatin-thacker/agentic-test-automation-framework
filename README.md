@@ -29,9 +29,10 @@ npm run inspect
 
 ## Playwright MCP / Selector Validation
 
-This repository supports Playwright MCP-style selector validation for demo-ready automation.
+This repository is designed for an LLM-assisted workflow where the agent uses Playwright MCP as the browser interaction and exploration layer.
 
-- Run `npm run mcp` to launch the Playwright selector validation workflow via `codegen`.
+- Treat `npm run mcp` as the primary LLM/MCP locator creation and validation workflow.
+- Use MCP to inspect live page structure, generate locator candidates, and confirm selectors before updating locator modules.
 - If your installed Playwright version supports a dedicated `mcp` command in the future, that is also acceptable.
 
 ```bash

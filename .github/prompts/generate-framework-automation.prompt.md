@@ -24,7 +24,8 @@ Provide:
 - Use page objects for workflows and locator modules for selectors
 - Reuse `BasePage` and existing utilities
 - Prefer robust selector strategies, not brittle XPath/CSS unless justified
-- Validate selectors with Playwright MCP or browser inspector when real-time access is available
+- Treat Playwright MCP as the browser interaction and exploration layer for the LLM/agent
+- Strictly use Playwright MCP for locator creation and validation by default, unless explicitly instructed otherwise
 - Use `npm run mcp` or `npx playwright codegen` to inspect live pages and create or confirm locators before committing
 - Use MCP for locator creation/exploration, not as a test execution workflow
 - Document inferred or unvalidated locators clearly and request confirmation

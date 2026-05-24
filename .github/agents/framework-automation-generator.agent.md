@@ -29,7 +29,8 @@ After test cases are approved and there is enough application context, UI struct
 - Generate or update page objects and helper methods
 - Reuse `BasePage` and existing utilities
 - Prefer robust selectors (role, label, text, test id, semantic selectors)
-- Validate locators using Playwright MCP or browser inspection tools when real-time access is available
+- Treat Playwright MCP as the live browser interaction layer for locator generation and page exploration
+- Strictly use Playwright MCP for locator creation and validation by default, unless explicitly instructed otherwise
 - Prefer `npm run mcp` or `npx playwright codegen` as the locator creation/validation workflow
 - Use MCP for browser exploration and selector confirmation, not as a substitute for formal test execution
 - Document any inferred selectors clearly when live validation is not possible

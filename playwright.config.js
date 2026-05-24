@@ -15,5 +15,11 @@ export default defineConfig({
     video: "retain-on-failure",
     trace: "retain-on-failure"
   },
-  reporter: [["list"]]
+  reporter: [["list"]],
+  mcpServers: {
+    playwright: {
+      command: "npx",
+      args: ["@playwright/mcp@latest"]
+    }
+  }
 });

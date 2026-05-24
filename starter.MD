@@ -81,4 +81,4 @@ Run evidence from actual AI-assisted demos belongs under:
 
 - `ai-demo/runs/<timestamp>/`
 
-There are currently no AI npm commands, no LLM API clients, no mock LLM plans, and no `src/ai` runtime.
+There are currently no AI npm commands, no LLM API clients, no mock LLM plans, and no `src/ai` runtime. The intended LLM/MCP interaction is expressed through the reusable prompt and agent instruction layer, not via runtime repository code.
