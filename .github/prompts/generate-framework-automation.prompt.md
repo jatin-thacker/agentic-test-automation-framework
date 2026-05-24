@@ -25,7 +25,8 @@ Provide:
 - Reuse `BasePage` and existing utilities
 - Prefer robust selector strategies, not brittle XPath/CSS unless justified
 - Validate selectors with Playwright MCP or browser inspector when real-time access is available
-- Use `npm run mcp` or `npx playwright codegen` to inspect live pages and confirm selectors before committing
+- Use `npm run mcp` or `npx playwright codegen` to inspect live pages and create or confirm locators before committing
+- Use MCP for locator creation/exploration, not as a test execution workflow
 - Document inferred or unvalidated locators clearly and request confirmation
 - Include assumptions and confirmation points
 
