@@ -1,12 +1,14 @@
 import path from "node:path";
 import fs from "fs-extra";
 import { HtmlReportHelper } from "../utils/HtmlReportHelper.js";
+import { DocxReportHelper } from "../utils/DocxReportHelper.js";
 import actionLogStore from "../utils/ActionLogStore.js";
 import { FileUtils } from "../utils/FileUtils.js";
 
 export class ReportManager {
   constructor() {
     this.htmlReportHelper = new HtmlReportHelper();
+    this.docxReportHelper = new DocxReportHelper();
   }
 
   async generate() {
@@ -22,6 +24,7 @@ export class ReportManager {
       failures: latestLogs.filter((l) => l.status === "FAILED").length
     };
     const htmlPath = await this.htmlReportHelper.generate(summary);
+    const docxPath = await this.docxReportHelper.generate();
     const outPath = path.resolve(process.cwd(), "src/reports/execution-summary/summary.json");
     await fs.ensureDir(path.dirname(outPath));
     await fs.writeJson(
@@ -29,11 +32,12 @@ export class ReportManager {
       {
         summary,
         htmlPath,
+        docxPath,
         latestLogFile
       },
       { spaces: 2 }
     );
-    return { htmlPath, outPath };
+    return { htmlPath, docxPath, outPath };
   }
 }
 

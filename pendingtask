@@ -1,0 +1,1 @@
+also add screenshots, make all UI actions, have screenshot before and after the step. (if not already) Get the screenshot added in the word file. We will worry about size later. Also, we need to find a way to ignore the old screenshot runs if that's bothering. Maybe another package.json to clear the previous run screenshot, like a handy tool. 
