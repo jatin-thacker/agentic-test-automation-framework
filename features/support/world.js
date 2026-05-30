@@ -1,6 +1,7 @@
 import { World } from "@cucumber/cucumber";
 import { chromium, firefox, webkit } from "playwright";
 import { TestConfig } from "../../src/config/TestConfig.js";
+import { AppConfig } from "../../src/config/AppConfig.js";
 import { LoggerUtils } from "../../src/utils/LoggerUtils.js";
 import { ScreenshotUtils } from "../../src/utils/ScreenshotUtils.js";
 import { WaitUtils } from "../../src/utils/WaitUtils.js";
@@ -28,7 +29,9 @@ export class CustomWorld extends World {
   async initialize() {
     const launch = browserMap[TestConfig.browser] || chromium;
     this.browser = await launch.launch({ headless: !TestConfig.headed });
-    this.context = await this.browser.newContext();
+    this.context = await this.browser.newContext({
+      baseURL: AppConfig.baseUrl
+    });
     this.page = await this.context.newPage();
     this.uiUtils = new UIUtils({
       page: this.page,
