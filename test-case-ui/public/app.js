@@ -1,132 +1,151 @@
 document.addEventListener('DOMContentLoaded', () => {
     const btnDesignCases = document.getElementById('btnDesignCases');
-    const btnRunMCP = document.getElementById('btnRunMCP');
-    const btnExecute = document.getElementById('btnExecute');
-    
-    const outputConsole = document.getElementById('outputConsole');
+    const btnRunMCP      = document.getElementById('btnRunMCP');
+    const btnExecute     = document.getElementById('btnExecute');
+
+    const outputConsole  = document.getElementById('outputConsole');
     const userStoryInput = document.getElementById('userStoryInput');
     const featureSelector = document.getElementById('featureSelector');
 
-    // Helper to toggle button loading state
+    // ──────────────────────────────────────────────────────
+    // HELPERS
+    // ──────────────────────────────────────────────────────
     function toggleLoading(btn, isLoading) {
-        const text = btn.querySelector('.btn-text');
-        const loader = btn.querySelector('.loader');
-        if (isLoading) {
-            btn.disabled = true;
-            text.classList.add('hidden');
-            loader.classList.remove('hidden');
-        } else {
-            btn.disabled = false;
-            text.classList.remove('hidden');
-            loader.classList.add('hidden');
-        }
+        btn.querySelector('.btn-text').classList.toggle('hidden', isLoading);
+        btn.querySelector('.loader').classList.toggle('hidden', !isLoading);
+        btn.disabled = isLoading;
     }
 
-    // Helper to print to console
     function printToConsole(text, append = false) {
-        if (append) {
-            outputConsole.textContent += '\n\n' + text;
-        } else {
-            outputConsole.textContent = text;
-        }
+        outputConsole.textContent = append
+            ? outputConsole.textContent + '\n' + text
+            : text;
         outputConsole.parentElement.scrollTop = outputConsole.parentElement.scrollHeight;
     }
 
-    // Fetch existing features on load
-    async function loadFeatures() {
+    function appendLine(line) {
+        outputConsole.textContent += '\n' + line;
+        outputConsole.parentElement.scrollTop = outputConsole.parentElement.scrollHeight;
+    }
+
+    /** Consume an SSE stream from a POST endpoint. Calls onLine per data chunk, onDone on close. */
+    async function streamPost(url, body, onLine, onDone) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const parts = buffer.split('\n\n');
+            buffer = parts.pop(); // keep incomplete chunk
+
+            for (const part of parts) {
+                const dataLine = part.split('\n').find(l => l.startsWith('data:'));
+                if (!dataLine) continue;
+                try {
+                    const json = JSON.parse(dataLine.slice(5).trim());
+                    if (json.done) { onDone && onDone(); return; }
+                    if (json.line !== undefined) onLine(json.line);
+                } catch (_) { /* skip malformed */ }
+            }
+        }
+        onDone && onDone();
+    }
+
+    // ──────────────────────────────────────────────────────
+    // LOAD FEATURES INTO DROPDOWN
+    // ──────────────────────────────────────────────────────
+    async function loadFeatures(selectValue) {
         try {
             const res = await fetch('/api/features');
             const data = await res.json();
-            
             featureSelector.innerHTML = '';
             if (data.features && data.features.length > 0) {
-                data.features.forEach(file => {
+                data.features.forEach(f => {
                     const opt = document.createElement('option');
-                    opt.value = file;
-                    opt.textContent = file;
+                    opt.value = f;
+                    opt.textContent = f;
                     featureSelector.appendChild(opt);
                 });
+                if (selectValue) featureSelector.value = selectValue;
                 btnExecute.disabled = false;
             } else {
-                featureSelector.innerHTML = '<option value="">No features found</option>';
+                featureSelector.innerHTML = '<option value="">No .feature files found</option>';
             }
-        } catch (err) {
-            console.error('Failed to load features', err);
+        } catch (e) {
             featureSelector.innerHTML = '<option value="">Error loading features</option>';
         }
     }
 
     loadFeatures();
 
-    // Stage 1: Design Cases
+    // ──────────────────────────────────────────────────────
+    // STAGE 1 – Design Cases
+    // ──────────────────────────────────────────────────────
     btnDesignCases.addEventListener('click', async () => {
-        const story = userStoryInput.value.trim();
-        if (!story) {
-            alert('Please paste a user story first.');
-            return;
-        }
-
+        if (!userStoryInput.value.trim()) { alert('Paste a User Story first.'); return; }
         toggleLoading(btnDesignCases, true);
-        printToConsole('Initializing [test-case-designer] agent...\nAnalyzing User Story markdown...\nGenerating BDD scenarios...');
-
+        printToConsole('[test-case-designer] Analysing User Story...\n');
         try {
             const res = await fetch('/api/design-cases', { method: 'POST' });
             const data = await res.json();
             printToConsole(data.output);
-            
-            // Unlock next stage
             btnRunMCP.disabled = false;
-        } catch (err) {
-            printToConsole('Error: ' + err.message);
+        } catch (e) {
+            appendLine('ERROR: ' + e.message);
         } finally {
             toggleLoading(btnDesignCases, false);
         }
     });
 
-    // Stage 2: Run MCP
+    // ──────────────────────────────────────────────────────
+    // STAGE 2 – Run MCP (SSE streaming)
+    // ──────────────────────────────────────────────────────
     btnRunMCP.addEventListener('click', async () => {
         toggleLoading(btnRunMCP, true);
-        printToConsole('Initializing [framework-automation-generator] agent...\nConnecting to @playwright/mcp client...\nWriting Page Objects, Locators, and Step Definitions to disk...');
-
+        printToConsole('[framework-automation-generator] Starting MCP session...\n');
         try {
-            const res = await fetch('/api/run-mcp', { method: 'POST' });
-            const data = await res.json();
-            printToConsole(data.output);
-            
-            // Reload dropdown so the newly generated feature file appears
-            await loadFeatures();
-            
-            // Ensure the newly created checkout.feature is selected
-            if (featureSelector.querySelector('option[value="checkout.feature"]')) {
-                featureSelector.value = 'checkout.feature';
-            }
-            
-        } catch (err) {
-            printToConsole('Error: ' + err.message);
-        } finally {
+            await streamPost(
+                '/api/run-mcp',
+                {},
+                line => appendLine(line),
+                async () => {
+                    // Refresh dropdown — newly written checkout.feature will appear
+                    await loadFeatures('checkout.feature');
+                    toggleLoading(btnRunMCP, false);
+                }
+            );
+        } catch (e) {
+            appendLine('ERROR: ' + e.message);
             toggleLoading(btnRunMCP, false);
         }
     });
 
-    // Stage 3: Execute Tests (Headed)
+    // ──────────────────────────────────────────────────────
+    // STAGE 3 – Execute (SSE streaming, headed)
+    // ──────────────────────────────────────────────────────
     btnExecute.addEventListener('click', async () => {
-        const selectedFeature = featureSelector.value;
-        if (!selectedFeature) return;
-
+        const selected = featureSelector.value;
+        if (!selected) return;
         toggleLoading(btnExecute, true);
-        printToConsole(`Triggering headed execution for: ${selectedFeature}...\nWatch your screen for the Playwright browser!`);
-
+        printToConsole(`[executor] Launching headed Playwright for: ${selected}\n`);
         try {
-            const res = await fetch('/api/execute', { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ targetFeature: selectedFeature })
-            });
-            const data = await res.json();
-            printToConsole('--- HEADED EXECUTION RESULTS ---\n\n' + data.output);
-        } catch (err) {
-            printToConsole('Execution Error: ' + err.message);
-        } finally {
+            await streamPost(
+                '/api/execute',
+                { targetFeature: selected },
+                line => appendLine(line),
+                () => toggleLoading(btnExecute, false)
+            );
+        } catch (e) {
+            appendLine('ERROR: ' + e.message);
             toggleLoading(btnExecute, false);
         }
     });
