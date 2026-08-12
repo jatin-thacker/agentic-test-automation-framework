@@ -1,0 +1,66 @@
+name: Request Test Case Automation
+description: Submit a new test case for the AI Agent to automate.
+title: "[TEST]: "
+labels: ["automation-request"]
+assignees:
+  - github-actions
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## AI Automation Request
+        Fill out this form to structure a test case. Once submitted, our AI agent will pick up this issue and automatically generate the Playwright & Cucumber scripts! 🚀
+
+  - type: input
+    id: feature_name
+    attributes:
+      label: Feature Name
+      description: What feature is being tested? (e.g., Login, Checkout, Profile)
+      placeholder: e.g., User Login
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User Story / Context
+      description: Provide the background or acceptance criteria for this test.
+      placeholder: "As a standard user, I want to log in so that I can access my dashboard."
+    validations:
+      required: true
+
+  - type: textarea
+    id: preconditions
+    attributes:
+      label: Pre-conditions
+      description: What needs to be set up before the test runs?
+      placeholder: "- User account exists\n- User is on the login page"
+    validations:
+      required: false
+
+  - type: textarea
+    id: test_steps
+    attributes:
+      label: Test Steps
+      description: Provide step-by-step instructions for the test case.
+      placeholder: "1. Enter valid username\n2. Enter valid password\n3. Click Login button"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_results
+    attributes:
+      label: Expected Results
+      description: What should happen when the test passes?
+      placeholder: "The user is redirected to the dashboard and sees a welcome message."
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_data
+    attributes:
+      label: Test Data Requirements
+      description: Any specific data needed for this test? (e.g., specific row in TestData.xlsx)
+      placeholder: "Use the 'StandardUser' row in the LoginData sheet."
+    validations:
+      required: false

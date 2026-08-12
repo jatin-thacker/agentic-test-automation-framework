@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Automation Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="main-header">
+        <div class="logo-placeholder">🚀</div>
+        <h1>Agentic Control Panel</h1>
+        <p>End-to-End Test Generation & Execution Dashboard</p>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- LEFT COLUMN: INPUT -->
+        <section class="glass-panel input-panel">
+            <h2>1. User Story Input</h2>
+            <p class="subtitle">Paste your raw markdown User Story below.</p>
+            <textarea id="userStoryInput" placeholder="## US-004: Complete Checkout..."></textarea>
+            
+            <div class="action-buttons">
+                <button id="btnDesignCases" class="primary-btn">
+                    <span class="btn-text">Agent: Design Test Cases</span>
+                    <span class="loader hidden"></span>
+                </button>
+                <button id="btnRunMCP" class="primary-btn" disabled>
+                    <span class="btn-text">Agent: Generate Scripts (MCP)</span>
+                    <span class="loader hidden"></span>
+                </button>
+                <button id="btnExecute" class="run-btn" disabled>
+                    <span class="btn-text">▶ Execute Test Suite</span>
+                    <span class="loader hidden"></span>
+                </button>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: OUTPUT -->
+        <section class="glass-panel output-panel">
+            <h2>2. Agent Output Console</h2>
+            <div class="console-wrapper">
+                <pre id="outputConsole" class="code-view">// Awaiting Agent Execution...</pre>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
