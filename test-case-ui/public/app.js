@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const outputConsole = document.getElementById('outputConsole');
     const userStoryInput = document.getElementById('userStoryInput');
+    const featureSelector = document.getElementById('featureSelector');
 
     // Helper to toggle button loading state
     function toggleLoading(btn, isLoading) {
@@ -30,6 +31,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         outputConsole.parentElement.scrollTop = outputConsole.parentElement.scrollHeight;
     }
+
+    // Fetch existing features on load
+    async function loadFeatures() {
+        try {
+            const res = await fetch('/api/features');
+            const data = await res.json();
+            
+            featureSelector.innerHTML = '';
+            if (data.features && data.features.length > 0) {
+                data.features.forEach(file => {
+                    const opt = document.createElement('option');
+                    opt.value = file;
+                    opt.textContent = file;
+                    featureSelector.appendChild(opt);
+                });
+                btnExecute.disabled = false;
+            } else {
+                featureSelector.innerHTML = '<option value="">No features found</option>';
+            }
+        } catch (err) {
+            console.error('Failed to load features', err);
+            featureSelector.innerHTML = '<option value="">Error loading features</option>';
+        }
+    }
+
+    loadFeatures();
 
     // Stage 1: Design Cases
     btnDesignCases.addEventListener('click', async () => {
@@ -59,15 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stage 2: Run MCP
     btnRunMCP.addEventListener('click', async () => {
         toggleLoading(btnRunMCP, true);
-        printToConsole('Initializing [framework-automation-generator] agent...\nConnecting to @playwright/mcp client...\nGenerating Page Objects and Locators...');
+        printToConsole('Initializing [framework-automation-generator] agent...\nConnecting to @playwright/mcp client...\nWriting Page Objects, Locators, and Step Definitions to disk...');
 
         try {
             const res = await fetch('/api/run-mcp', { method: 'POST' });
             const data = await res.json();
-            printToConsole('✅ Automation Scripts Generated via MCP:\n\n' + data.output);
+            printToConsole(data.output);
             
-            // Unlock final stage
-            btnExecute.disabled = false;
+            // Reload dropdown so the newly generated feature file appears
+            await loadFeatures();
+            
+            // Ensure the newly created checkout.feature is selected
+            if (featureSelector.querySelector('option[value="checkout.feature"]')) {
+                featureSelector.value = 'checkout.feature';
+            }
+            
         } catch (err) {
             printToConsole('Error: ' + err.message);
         } finally {
@@ -75,15 +108,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Stage 3: Execute Tests
+    // Stage 3: Execute Tests (Headed)
     btnExecute.addEventListener('click', async () => {
+        const selectedFeature = featureSelector.value;
+        if (!selectedFeature) return;
+
         toggleLoading(btnExecute, true);
-        printToConsole('Triggering Test Runner: npm run test:smoke...\nWaiting for execution to complete...');
+        printToConsole(`Triggering headed execution for: ${selectedFeature}...\nWatch your screen for the Playwright browser!`);
 
         try {
-            const res = await fetch('/api/execute', { method: 'POST' });
+            const res = await fetch('/api/execute', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ targetFeature: selectedFeature })
+            });
             const data = await res.json();
-            printToConsole('--- EXECUTION RESULTS ---\n\n' + data.output);
+            printToConsole('--- HEADED EXECUTION RESULTS ---\n\n' + data.output);
         } catch (err) {
             printToConsole('Execution Error: ' + err.message);
         } finally {

@@ -220,7 +220,7 @@ app.post('/api/execute', (req, res) => {
   const featurePath = path.join('features', targetFeature);
   // Execute headed, pointing specifically to the requested feature file.
   // Using npx cucumber-js directly to avoid cross-platform spawn issues with npm run scripts.
-  const command = \`npx cucumber-js "\${featurePath}" --config cucumber.cjs\`;
+  const command = `npx cucumber-js "${featurePath}" --config cucumber.cjs`;
   
   const env = { ...process.env, HEADLESS: 'false', HEADED: 'true' };
 
@@ -233,5 +233,5 @@ app.post('/api/execute', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(\`Agentic Dashboard running at http://localhost:\${PORT}\`);
+  console.log(`Agentic Dashboard running at http://localhost:${PORT}`);
 });
