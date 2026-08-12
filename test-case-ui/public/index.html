@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agentic Automation Dashboard</title>
+    <title>One-Stop QA Solution Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -15,15 +15,15 @@
 
     <header class="main-header">
         <div class="logo-placeholder">🚀</div>
-        <h1>Agentic Control Panel</h1>
-        <p>End-to-End Test Generation & Execution Dashboard</p>
+        <h1>One-Stop QA Solution</h1>
+        <p>End-to-End Agentic Test Generation & Execution</p>
     </header>
 
     <main class="dashboard-grid">
         <!-- LEFT COLUMN: INPUT -->
         <section class="glass-panel input-panel">
-            <h2>1. User Story Input</h2>
-            <p class="subtitle">Paste your raw markdown User Story below.</p>
+            <h2>1. Agentic Pipeline</h2>
+            <p class="subtitle">Paste a User Story to generate automated tests physically in the repo.</p>
             <textarea id="userStoryInput" placeholder="## US-004: Complete Checkout..."></textarea>
             
             <div class="action-buttons">
@@ -32,11 +32,22 @@
                     <span class="loader hidden"></span>
                 </button>
                 <button id="btnRunMCP" class="primary-btn" disabled>
-                    <span class="btn-text">Agent: Generate Scripts (MCP)</span>
+                    <span class="btn-text">Agent: Generate & Write Scripts (MCP)</span>
                     <span class="loader hidden"></span>
                 </button>
+            </div>
+
+            <hr class="divider">
+
+            <h2>2. Test Execution (Headed)</h2>
+            <p class="subtitle">Select an existing scenario to execute on screen.</p>
+            
+            <div class="execution-controls">
+                <select id="featureSelector">
+                    <option value="">Loading features...</option>
+                </select>
                 <button id="btnExecute" class="run-btn" disabled>
-                    <span class="btn-text">▶ Execute Test Suite</span>
+                    <span class="btn-text">▶ Run Selected Feature</span>
                     <span class="loader hidden"></span>
                 </button>
             </div>
@@ -44,7 +55,7 @@
 
         <!-- RIGHT COLUMN: OUTPUT -->
         <section class="glass-panel output-panel">
-            <h2>2. Agent Output Console</h2>
+            <h2>3. Output Console</h2>
             <div class="console-wrapper">
                 <pre id="outputConsole" class="code-view">// Awaiting Agent Execution...</pre>
             </div>
