@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
 const fs   = require('fs');
 const path = require('path');
 
-const ROOT        = path.join(__dirname, '..');
+const ROOT        = path.join(__dirname, '..', '..');
 const BASE_URL    = 'https://www.saucedemo.com';
 const USERNAME    = 'standard_user';
 const PASSWORD    = 'secret_sauce';
