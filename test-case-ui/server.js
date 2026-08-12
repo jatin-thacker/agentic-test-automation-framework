@@ -131,7 +131,7 @@ app.post('/api/run-mcp', (_req, res) => {
   const scriptPath = path.join(__dirname, 'scripts', 'mcp-discover.js');
   const nodeCmd    = IS_WIN ? 'node.exe' : 'node';
 
-  spawnSSE(res, nodeCmd, [scriptPath], ROOT).then(code => {
+  spawnSSE(res, nodeCmd, [`"${scriptPath}"`], ROOT).then(code => {
     sseLine(res, '');
     if (code === 0) {
       sseLine(res, '──────────────────────────────────────────');
